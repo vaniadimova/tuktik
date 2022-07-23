@@ -12,7 +12,7 @@ interface IProps {
 
 const Home = ({ videos }: IProps) => {
   return (
-<div className='flex flex-col gap-10 videos h-full'>
+<div className='flex flex-col h-full gap-10 videos'>
 {videos.length 
 ?  videos?.map((video: Video) => (
     <VideoCard post={video} key={video._id}/>
@@ -22,22 +22,21 @@ const Home = ({ videos }: IProps) => {
    );
 };
 
+export default Home;
 
-
-export const getServerSideProps = async ({ query: { topic }} 
-  : {query: { topic: string} }) => {
-    let response = null;
+export const getServerSideProps = async ({ 
+  query: { topic },
+} : {
+  query: { topic: string};
+ }) => {
+  let response = await axios.get(`${BASE_URL}/api/post`);
 
 if(topic) {
  response  = await axios.get(`${BASE_URL}/api/discover/${topic}`);
-} else {
-   response = await axios.get(`${BASE_URL}/api/post`);
-  }
-  return {
-    props: { 
-      videos: response.data
-     },
+} 
+
+return {
+    props: { videos: response.data},
   };
 };
 
-export default Home;
